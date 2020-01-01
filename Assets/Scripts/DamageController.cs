@@ -80,7 +80,7 @@ public class DamageController : MonoBehaviour
             //moveDirection.y += 5.0f;
         }
 
-        Debug.Log("notag trig");
+        //Debug.Log("notag trig");
     }
 
     void movementController() {

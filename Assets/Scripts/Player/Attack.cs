@@ -40,14 +40,6 @@ public class Attack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (enable) {
-            Debug.Log("attack enabled");
-            startUpCD = startTime[0];
-            startUpTimer = Time.time + startUpCD;
-            enable = false;
-            started = true;
-        }
-
         if (started && Time.time > startUpTimer)
         {
             Debug.Log("box added");
@@ -70,22 +62,19 @@ public class Attack : MonoBehaviour
     public void TriggerDetected(float damages, Collider Col)
     {
         Debug.Log("hit detected");
-        float[] values = {damage[0], xMove[0], yMove[0], knockback[0]};
-        Col.gameObject.SendMessage("ApplyDamage", values);
+        if(Col.gameObject.tag == "Enemy") {
+            float[] values = { damage[0], xMove[0], yMove[0], knockback[0] };
+            Col.gameObject.SendMessage("ApplyDamage", values);
+        }
         //float damage, float xMove, float yMove, float knockback, string element
     }
 
-    void OnTriggerEnter(Collider col)
-    {
-        if (col.gameObject.tag == "Enemy")
-        {
-            Debug.Log("hit triggering in attack.cs");
-            //health -= 15;
-            //moveDirection.x = 3.0f;
-            //moveDirection.y = 5.0f;
-            //moveDirection.y += 5.0f;
-        }
-
-        Debug.Log("notag trig");
+    public void StartAttack() {
+            Debug.Log("attack enabled");
+            startUpCD = startTime[0];
+            startUpTimer = Time.time + startUpCD;
+            enable = false;
+            started = true;
     }
+
 }

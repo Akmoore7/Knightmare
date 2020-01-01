@@ -9,9 +9,6 @@ public class PlayerWeapon : MonoBehaviour
     public Attack[] attacks;
     public Sprite sprite;
 
-    public float boxCD = 0.2f;
-    public float boxTimer = 0.0f;
-
     public Attack currAttack;
     // Start is called before the first frame update
     void Start()
@@ -24,8 +21,9 @@ public class PlayerWeapon : MonoBehaviour
     {
     }
 
-    void startAttack(int attackNum) {
+    void InitAttack(int attackNum) {
         Debug.Log("playerWeapon");
-        attacks[attackNum].enable = true;
+        //attacks[attackNum].enable = true;
+        attacks[attackNum].StartAttack();
     }
 }
