@@ -4,39 +4,42 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    private Vector3 moveDirection = Vector3.zero;
     CharacterController characterController;
-    public SpriteRenderer sprite;
+    public PlayerDamageController health;
     public Animator motionAnimator;
+    public SpriteRenderer sprite;
+    public GameObject[] hitBoxes;
+    public Sprite[] spriteArray;
+    public Weapon weapon;
+
+    private BoxCollider box;
+    private MeshRenderer mesh;
 
     public float speed = 4.0f;
     public float jumpSpeed = 10.0f;
     public float gravity = 10.0f;
+    public float weight = 1f;
+
+    public bool newlyGrounded = false;
+    public bool alreadyKnocked = true;
+    public bool facingRight = true;
+    public bool alreadyDead = false;
+    public bool inLag = false;
+    public bool blocking = false;
+    public bool dashing = false;
+    public bool dodging = false;
     public bool jumpOne = false;
     public bool jumpTwo = false;
 
-    public bool facingRight = true;
-    public bool dashing = false;
-    public bool blocking = false;
-    public bool dodging = false;
-
-    private bool boxBool = false;
-
-    public float attackCD = 1.0f;
-    public float nextAttack = 0.0f;
-    public float boxCD = 0.2f;
-    public float boxTimer = 0.0f;
-
-    public PlayerHealth health;
-
-    public PlayerWeapon weapon;
+    private float xQueuedKnockback = 0f;
+    private float yQueuedKnockback = 0f;
+    public float nextAttack = 0f;
+    public float attackCD = 1f;
+    public float lagTimer = 0f;
+    public float lagHelper = 0f;
 
 
-    private Vector3 moveDirection = Vector3.zero;
-    public Sprite[] spriteArray;
-    public GameObject[] hitBoxes;
-
-    private BoxCollider box;
-    private MeshRenderer mesh;
 
     // Start is called before the first frame update
     void Start()
@@ -47,9 +50,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        boxChecker();
-        MovementController();
-        CombatController();
+        if (!alreadyDead) {
+            boxChecker();
+            MovementController();
+            CombatController();
+        }
     }
 
     void MovementController()
@@ -58,9 +63,15 @@ public class PlayerController : MonoBehaviour
 
         if (characterController.isGrounded)
         {
+            if (!newlyGrounded) {
+                newlyGrounded = true;
+                lagTimer = Time.time + 0.07f;
+                moveDirection.x *= speed * 0f;
+
+            }
             // We are grounded, so recalculate
             // move direction directly from axes
-            if (Time.time > boxTimer)
+            if (!inLag)
             {
                 //moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
                 moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0.0f, 0.0f);
@@ -70,15 +81,19 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            moveDirection.x = Input.GetAxis("Horizontal");
-            moveDirection.x *= speed * 0.75f;
-            motionAnimator.enabled = false;
-            sprite.sprite = spriteArray[2];
-            //Fastfalling
-            //if (Input.GetAxis("Vertical") < 0)
-            //{
-            //    moveDirection.y = -7f;
-            //}
+            if (!inLag)
+            {
+                moveDirection.x = Input.GetAxis("Horizontal");
+                //moveDirection.x *= speed * 0.75f;
+                moveDirection.x *= speed * 1f;
+                motionAnimator.enabled = false;
+                sprite.sprite = spriteArray[2];
+                //Fastfalling
+                //if (Input.GetAxis("Vertical") < 0)
+                //{
+                //    moveDirection.y = -7f;
+                //}
+            }
 
         }
 
@@ -88,14 +103,21 @@ public class PlayerController : MonoBehaviour
         // when the moveDirection is multiplied by deltaTime). This is because gravity should be applied
         // as an acceleration (ms^-2)
 
+        stunController();
+
+        if (!health.alive) {
+            deathAct();
+        }
+
         characterController.Move(moveDirection * Time.deltaTime);
     }
 
     void CombatController() {
         //DefenseController();
-        WeaponController();
-        RelicController();
-
+        if (!inLag) {
+            WeaponController();
+            RelicController();
+        }
     }
 
     void WeaponController()
@@ -107,7 +129,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (!dashing)
                 {
-                    moveDirection.x *= 0.1f;
+                    moveDirection.x *= 0.0f;
 
                     if ((Input.GetKey(KeyCode.D) && facingRight) || (Input.GetKey(KeyCode.A) && !facingRight))
                     {
@@ -198,9 +220,9 @@ public class PlayerController : MonoBehaviour
                 relicAttack = 1;
             }
 
-            if (boxBool && Time.time > boxTimer)
+            if (inLag && Time.time > lagTimer)
             {
-                boxBool = false;
+                inLag = false;
                 //box.enabled = false;
                 //mesh.enabled = false;
             }
@@ -217,15 +239,16 @@ public class PlayerController : MonoBehaviour
                 jumpOne = true;
                 jumpTwo = true;
 
-                if (Input.GetButtonDown("Jump"))
+                if (Input.GetButtonDown("Jump") && !inLag)
                 {
+                    newlyGrounded = false;
                     moveDirection.y = jumpSpeed;
                     jumpOne = false;
                 }
             }
             else
             {
-                if (Input.GetButtonDown("Jump") && jumpTwo)
+                if (Input.GetButtonDown("Jump") && jumpTwo && !inLag)
                 {
                     moveDirection.y = jumpSpeed;
                     jumpTwo = false;
@@ -241,7 +264,7 @@ public class PlayerController : MonoBehaviour
                 dashing = true;
                 speed = 7;
             }
-            else
+            else if(!Input.GetKey(KeyCode.LeftShift))
             {
                 dashing = false;
                 speed = 5;
@@ -343,20 +366,88 @@ public class PlayerController : MonoBehaviour
 
         }
 
+    void stunController()
+    {
+        if (inLag)
+        {
+            if (!alreadyKnocked)
+            {
+                moveDirection.x = xQueuedKnockback;
+                moveDirection.y = yQueuedKnockback;
+                alreadyKnocked = true;
+            }
+            else {
+                frictionController();
+            }
+        }
+    }
+
+    void frictionController()
+    {
+        if (moveDirection.x > 0)
+        {
+            moveDirection.x -= 3.0f * Time.deltaTime * weight;
+        }
+        if (moveDirection.x < 0)
+        {
+            moveDirection.x += 3.0f * Time.deltaTime * weight;
+        }
+
+        if (moveDirection.z > 0)
+        {
+            moveDirection.z -= 1f * Time.deltaTime * weight;
+        }
+        if (moveDirection.z < 0)
+        {
+            moveDirection.z += 1f * Time.deltaTime * weight;
+        }
+    }
+
+    public void hitTrigger(float xMove, float yMove, float hitStun)
+    {
+        inLag = true;
+        alreadyKnocked = false;
+
+        xQueuedKnockback = xMove;
+        yQueuedKnockback = yMove;
+
+        lagTimer = Time.time + hitStun;
+
+    }
 
     void LagController(float attackLag, float boxLag) { 
 
         nextAttack = Time.time + attackLag;
         //boxCD = 0.4f;
-        boxTimer = Time.time + boxLag;
-        boxBool = true;
+        lagTimer = Time.time + boxLag;
+        inLag = true;
+    }
+
+    public void deathAct()
+    {
+        if (!alreadyDead)
+        {
+            Debug.Log("Dead");
+            alreadyDead = true;
+            float rand = Random.Range(-1.0f, 1.0f);
+            transform.localRotation = Quaternion.Euler(30, 0, 90);
+            if (rand >= 0.0f)
+            {
+                moveDirection.z = 2;
+            }
+            else
+            {
+                moveDirection.z = -2;
+            }
+        }
     }
 
     void boxChecker() {
-        if (boxBool && Time.time > boxTimer)
+        if (inLag && Time.time > lagTimer)
         {
-            boxBool = false;
+            inLag = false;
         }
     }
+
 
 }

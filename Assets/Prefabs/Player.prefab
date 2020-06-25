@@ -93,6 +93,7 @@ MonoBehaviour:
   dashing: 0
   blocking: 0
   dodging: 0
+  newlyGrounded: 0
   attackCD: 1
   nextAttack: 0
   boxCD: 0.2
@@ -325,7 +326,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2014916715158698738
 Transform:
   m_ObjectHideFlags: 0
@@ -833,14 +834,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5502002076198631685, guid: 242f5f08ad49241a1ac3989fe6a0729e,
+        type: 3}
+      propertyPath: enable
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 242f5f08ad49241a1ac3989fe6a0729e, type: 3}
---- !u!4 &591170082639553373 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5502002077022110642, guid: 242f5f08ad49241a1ac3989fe6a0729e,
-    type: 3}
-  m_PrefabInstance: {fileID: 4931243345470873839}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &591170082639553372 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5502002077022110643, guid: 242f5f08ad49241a1ac3989fe6a0729e,
@@ -853,3 +853,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4121ba0184bcef4691fa1f0f13947f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &591170082639553373 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5502002077022110642, guid: 242f5f08ad49241a1ac3989fe6a0729e,
+    type: 3}
+  m_PrefabInstance: {fileID: 4931243345470873839}
+  m_PrefabAsset: {fileID: 0}
