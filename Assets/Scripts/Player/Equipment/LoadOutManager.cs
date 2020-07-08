@@ -12,11 +12,22 @@ public class LoadOutManager : MonoBehaviour
     void Start()
     {
         //userLocation = GetComponentInParent<Transform>();
+        //weapon = GetComponent<Weapon>();
+        //relics = GetComponent<RelicManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public Weapon getWeapon() {
+        return (weapon);
+    }
+
+    public RelicManager getRelic()
+    {
+        return (relics);
     }
 }

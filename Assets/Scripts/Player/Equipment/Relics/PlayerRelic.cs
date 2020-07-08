@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+
 public class PlayerRelic : MonoBehaviour
 {
     public bool ranged = false;
@@ -21,7 +23,7 @@ public class PlayerRelic : MonoBehaviour
 
     }
 
-    public void ActivateRelic() { 
-    
+    public virtual void ActivateRelic() {
+        Debug.Log("activate base relic");
     }
 }

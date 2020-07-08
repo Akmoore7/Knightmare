@@ -24,6 +24,6 @@ public class AttackBox : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         //Debug.Log("box triggered");
-        transform.parent.GetComponent<Attack>().TriggerDetected(damage, other);
+        transform.parent.GetComponent<Attack>().TriggerDetected(other);
     }
 }

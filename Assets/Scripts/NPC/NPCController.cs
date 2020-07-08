@@ -88,6 +88,7 @@ public class NPCController : MonoBehaviour
 
         xKnockback = xMove;
         yKnockback = yMove;
+        Debug.Log("Hit trigger");
 
         hitStunTime = Time.time + hitStun;
 

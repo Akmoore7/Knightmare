@@ -30,15 +30,14 @@ public class Attack : MonoBehaviour
     public bool enable = false;
     private bool boxActive = false;
 
-    public GameObject user;
     public Transform userLocation;
     //public AttackBox[] boxes;
 
     // Start is called before the first frame update
     void Start()
     {
-        user = gameObject.transform.parent.gameObject.transform.parent.gameObject.transform.parent.gameObject;
-        userLocation = user.transform;
+        //user = gameObject.transform.parent.gameObject.transform.parent.gameObject.transform.parent.gameObject;
+        //userLocation = user.transform;
         overallTime = startTime[0] + activeTime[0] + cooldown;
     }
 
@@ -65,7 +64,7 @@ public class Attack : MonoBehaviour
         }
     }
 
-    public void TriggerDetected(float damages, Collider Col)
+    public void TriggerDetected(Collider Col)
     {
         //Debug.Log("hit detected");
 
@@ -73,21 +72,20 @@ public class Attack : MonoBehaviour
         float[] values = { damage[0], xMove[0], yMove[0], knockback[0], hitStun[0] };
         //Debug.Log("HIT");   
 
-        if (Col.gameObject.tag == "Enemy" && user.tag == "Player"){
-
+        if (Col.gameObject.tag == "Enemy" && this.tag == "player_attack"){
+            Debug.Log("Enemy Hit");
             NPCDamageController recipient = Col.gameObject.GetComponent<NPCDamageController>();
             recipient.ApplyDamage(values, userLocation);
         }
-        else if (Col.gameObject.tag == "Player" && user.tag == "Enemy") {
+        else if (Col.gameObject.tag == "Player" && this.tag == "enemy_attack") {
             Debug.Log("playerHit");
             PlayerDamageController recipient = Col.gameObject.GetComponent<PlayerDamageController>();
             recipient.ApplyDamage(values, userLocation);
         }
-
     }
 
     public void StartAttack() {
-            Debug.Log("attack enabled");
+            //Debug.Log("attack enabled");
             startUpCD = startTime[0];
             startUpTimer = Time.time + startUpCD;
             enable = false;

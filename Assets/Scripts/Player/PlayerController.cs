@@ -11,7 +11,9 @@ public class PlayerController : MonoBehaviour
     public SpriteRenderer sprite;
     public GameObject[] hitBoxes;
     public Sprite[] spriteArray;
+    public LoadOutManager loadOut;
     public Weapon weapon;
+    public RelicManager relicManager;
 
     private BoxCollider box;
     private MeshRenderer mesh;
@@ -45,7 +47,10 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         characterController = GetComponent<CharacterController>();
-        motionAnimator.enabled = false;
+        //motionAnimator.enabled = false;
+        //loadOut = GetComponent<LoadOutManager>();
+        //weapon = loadOut.getWeapon();
+        //relicManager = loadOut.getRelic();
     }
 
     void Update()
@@ -64,6 +69,7 @@ public class PlayerController : MonoBehaviour
         if (characterController.isGrounded)
         {
             if (!newlyGrounded) {
+                motionAnimator.SetBool("Grounded", true);
                 newlyGrounded = true;
                 lagTimer = Time.time + 0.07f;
                 moveDirection.x *= speed * 0f;
@@ -86,8 +92,16 @@ public class PlayerController : MonoBehaviour
                 moveDirection.x = Input.GetAxis("Horizontal");
                 //moveDirection.x *= speed * 0.75f;
                 moveDirection.x *= speed * 1f;
-                motionAnimator.enabled = false;
-                sprite.sprite = spriteArray[2];
+
+                if (moveDirection.x == 0f)
+                {
+                    motionAnimator.SetBool("isRunning", false);
+                }
+                else {
+                    motionAnimator.SetBool("isRunning", true);
+                }
+                //motionAnimator.enabled = false;
+                //sprite.sprite = spriteArray[2];
                 //Fastfalling
                 //if (Input.GetAxis("Vertical") < 0)
                 //{
@@ -189,7 +203,8 @@ public class PlayerController : MonoBehaviour
                     curr_attack = 8;
                 }
             }
-            weapon.gameObject.SendMessage("InitAttack", curr_attack);
+            //weapon.gameObject.SendMessage("InitAttack", curr_attack);
+            weapon.InitAttack(curr_attack);
             LagController(weapon.attacks[curr_attack].overallTime, weapon.attacks[curr_attack].overallTime);
         }
     }
@@ -202,22 +217,22 @@ public class PlayerController : MonoBehaviour
             if ((Input.GetKey(KeyCode.D) && facingRight) || (Input.GetKey(KeyCode.A) && !facingRight))
             {
                 Debug.Log("side-relic");
-                relicAttack = 2;
+                relicAttack = 1;
             }
             else if (Input.GetKey(KeyCode.W))
             {
                 Debug.Log("up-relic");
-                relicAttack = 3;
+                relicAttack = 2;
             }
             else if (Input.GetKey(KeyCode.S))
             {
                 Debug.Log("d-relic");
-                relicAttack = 4;
+                relicAttack = 3;
             }
             else
             {
-                Debug.Log("neutral-relic");
-                relicAttack = 1;
+                //Debug.Log("neutral-relic");
+                relicAttack = 0;
             }
 
             if (inLag && Time.time > lagTimer)
@@ -226,7 +241,7 @@ public class PlayerController : MonoBehaviour
                 //box.enabled = false;
                 //mesh.enabled = false;
             }
-
+            relicManager.RelicActivate(relicAttack);
             LagController(0.4f, 0.4f);
         }
     }
@@ -241,10 +256,13 @@ public class PlayerController : MonoBehaviour
 
                 if (Input.GetButtonDown("Jump") && !inLag)
                 {
+                    motionAnimator.SetBool("isGrounded", false);
+                    motionAnimator.SetTrigger("PlayerJump");
+                    //motionAnimator.SetBool("Grounded", true);
                     newlyGrounded = false;
                     moveDirection.y = jumpSpeed;
                     jumpOne = false;
-                }
+            }
             }
             else
             {
@@ -271,27 +289,30 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-    void switch_sprite()
-        {
+    void switch_sprite() {
             //makes sure sprite is facing correct way, and when still no animation.
             if (moveDirection.x < 0)
             {
                 transform.localRotation = Quaternion.Euler(0, 180, 0);
                 facingRight = false;
-                motionAnimator.enabled = true;
+                motionAnimator.SetBool("isRunning", true);
+                //motionAnimator.enabled = true;
             }
             else if (moveDirection.x > 0)
             {
                 transform.localRotation = Quaternion.Euler(0, 0, 0);
                 facingRight = true;
-                motionAnimator.enabled = true;
+                motionAnimator.SetBool("isRunning", true);
+                //motionAnimator.enabled = true;
                 //motion_animator.deltaPosition.y += 0.5;
             }
             else
             {
-                motionAnimator.enabled = false;
-                sprite.sprite = spriteArray[0];
-                //sprite.transform.z
+                motionAnimator.SetBool("isRunning", false);
+            }
+
+            if (moveDirection.y > 0) {
+                //motionAnimator.SetBool("isGrounded", false);
             }
         }
 
