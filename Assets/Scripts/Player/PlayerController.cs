@@ -148,6 +148,7 @@ public class PlayerController : MonoBehaviour
                     if ((Input.GetKey(KeyCode.D) && facingRight) || (Input.GetKey(KeyCode.A) && !facingRight))
                     {
                         Debug.Log("f-tilt");
+                        motionAnimator.SetTrigger("FTilt");
                         curr_attack = 2;
                     }
                     else if (Input.GetKey(KeyCode.W))
@@ -256,8 +257,8 @@ public class PlayerController : MonoBehaviour
 
                 if (Input.GetButtonDown("Jump") && !inLag)
                 {
-                    motionAnimator.SetBool("isGrounded", false);
-                    motionAnimator.SetTrigger("PlayerJump");
+                    motionAnimator.SetBool("Grounded", false);
+                    motionAnimator.SetTrigger("Jump");
                     //motionAnimator.SetBool("Grounded", true);
                     newlyGrounded = false;
                     moveDirection.y = jumpSpeed;
@@ -393,6 +394,7 @@ public class PlayerController : MonoBehaviour
         {
             if (!alreadyKnocked)
             {
+                //motionAnimator.SetTrigger("Hit", false);
                 moveDirection.x = xQueuedKnockback;
                 moveDirection.y = yQueuedKnockback;
                 alreadyKnocked = true;
@@ -433,6 +435,8 @@ public class PlayerController : MonoBehaviour
         yQueuedKnockback = yMove;
 
         lagTimer = Time.time + hitStun;
+        motionAnimator.SetTrigger("Hit");
+        motionAnimator.SetBool("InHitStun", true);
 
     }
 
@@ -463,10 +467,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void setTransformPos(Transform trans)
+    {
+        transform.position = trans.position;
+    }
+
     void boxChecker() {
         if (inLag && Time.time > lagTimer)
         {
             inLag = false;
+            motionAnimator.SetBool("InHitStun", false);
         }
     }
 

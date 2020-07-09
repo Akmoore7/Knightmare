@@ -62,13 +62,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Scripts\GameData\GameMaster.cs" />
+    <Compile Include="Assets\Scripts\GameData\SceneEntrance.cs" />
+    <Compile Include="Assets\Scripts\GameData\SceneExit.cs" />
+    <Compile Include="Assets\Scripts\GameData\SceneTransition.cs" />
     <Compile Include="Assets\Scripts\NPC\enemyZombieAI.cs" />
     <Compile Include="Assets\Scripts\NPC\HardDummy.cs" />
     <Compile Include="Assets\Scripts\NPC\NPCController.cs" />
     <Compile Include="Assets\Scripts\NPC\NPCDamageController.cs" />
     <Compile Include="Assets\Scripts\Player\Attack.cs" />
     <Compile Include="Assets\Scripts\Player\AttackBox.cs" />
+    <Compile Include="Assets\Scripts\Player\CameraController.cs" />
     <Compile Include="Assets\Scripts\Player\Equipment\LoadOutManager.cs" />
     <Compile Include="Assets\Scripts\Player\Equipment\Relics\MeleeRelic.cs" />
     <Compile Include="Assets\Scripts\Player\Equipment\Relics\PassiveRelic.cs" />
