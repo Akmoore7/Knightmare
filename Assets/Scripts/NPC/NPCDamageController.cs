@@ -57,7 +57,7 @@ public class NPCDamageController : MonoBehaviour
                 yMove += values[2];
             }
 
-            currUnit.hitTrigger(xMove, yMove, values[4]);
+            currUnit.HitTrigger(xMove, yMove, values[4]);
             //Debug.Log("Knockback Applied");
         }
         //characterController.Move(moveDirection * Time.deltaTime);

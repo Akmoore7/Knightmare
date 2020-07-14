@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
     public bool dodging = false;
     public bool jumpOne = false;
     public bool jumpTwo = false;
+    public bool interacting = false;
 
     private float xQueuedKnockback = 0f;
     private float yQueuedKnockback = 0f;
@@ -41,9 +42,6 @@ public class PlayerController : MonoBehaviour
     public float lagTimer = 0f;
     public float lagHelper = 0f;
 
-
-
-    // Start is called before the first frame update
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -75,11 +73,9 @@ public class PlayerController : MonoBehaviour
                 moveDirection.x *= speed * 0f;
 
             }
-            // We are grounded, so recalculate
-            // move direction directly from axes
+            // We are grounded, so recalculate move direction directly from axes
             if (!inLag)
             {
-                //moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
                 moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0.0f, 0.0f);
                 moveDirection *= speed;
                 switch_sprite();
@@ -100,8 +96,7 @@ public class PlayerController : MonoBehaviour
                 else {
                     motionAnimator.SetBool("isRunning", true);
                 }
-                //motionAnimator.enabled = false;
-                //sprite.sprite = spriteArray[2];
+
                 //Fastfalling
                 //if (Input.GetAxis("Vertical") < 0)
                 //{
@@ -139,6 +134,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Fire1") && Time.time > nextAttack)
         {
             int curr_attack = 0;
+            //motionAnimator.SetTrigger("Attack");
             if (characterController.isGrounded)
             {
                 if (!dashing)
@@ -164,6 +160,7 @@ public class PlayerController : MonoBehaviour
                     else
                     {
                         Debug.Log("jab");
+                        motionAnimator.SetTrigger("Jab");
                         curr_attack = 1;
                     }
                 }
@@ -176,7 +173,6 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                //moveDirection.x *= 0.1f;
                 if ((Input.GetKey(KeyCode.D) && facingRight) || (Input.GetKey(KeyCode.A) && !facingRight))
                 {
                     Debug.Log("forward air");
@@ -204,7 +200,6 @@ public class PlayerController : MonoBehaviour
                     curr_attack = 8;
                 }
             }
-            //weapon.gameObject.SendMessage("InitAttack", curr_attack);
             weapon.InitAttack(curr_attack);
             LagController(weapon.attacks[curr_attack].overallTime, weapon.attacks[curr_attack].overallTime);
         }
@@ -232,15 +227,12 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                //Debug.Log("neutral-relic");
                 relicAttack = 0;
             }
 
             if (inLag && Time.time > lagTimer)
             {
                 inLag = false;
-                //box.enabled = false;
-                //mesh.enabled = false;
             }
             relicManager.RelicActivate(relicAttack);
             LagController(0.4f, 0.4f);
@@ -394,7 +386,6 @@ public class PlayerController : MonoBehaviour
         {
             if (!alreadyKnocked)
             {
-                //motionAnimator.SetTrigger("Hit", false);
                 moveDirection.x = xQueuedKnockback;
                 moveDirection.y = yQueuedKnockback;
                 alreadyKnocked = true;

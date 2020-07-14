@@ -6,16 +6,23 @@ public class CameraController : MonoBehaviour
 {
     public Transform player;
     public Vector3 offset;
-    // Start is called before the first frame update
+
+    public float minCameraX;
+    public float maxCameraX;
+
     void Start()
     {
-        
+        player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(player.position.x + offset.x, player.position.y + offset.y, offset.z); 
-        // Camera follows the player with specified offset position
+        // Camera follows the player with specified offset position between specified camera bounds (minCameraX, maxCameraX).
+        transform.position = new Vector3(Mathf.Clamp(player.position.x, minCameraX, maxCameraX),
+                player.position.y + offset.y,
+                offset.z);
+
+        //No Camera bound command (old)
+        //transform.position = new Vector3(player.position.x + offset.x, player.position.y + offset.y, offset.z); 
     }
 }

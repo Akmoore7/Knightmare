@@ -8,6 +8,10 @@ TagManager:
   - Enemy
   - enemy_attack
   - World
+  - Entrance
+  - HealthUI
+  - ManaUI
+  - TextBox
   layers:
   - Default
   - TransparentFX
@@ -17,7 +21,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - PostFX
   - 
   - 
   - 
@@ -44,4 +48,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: PostFX
+    uniqueID: 1387002539
     locked: 0

@@ -7,25 +7,24 @@ public class RelicManager : MonoBehaviour
     public PlayerRelic[] relics;
     public float mana;
     public float manaRegen;
+    public ResourceUI manaBar;
     
-    // Start is called before the first frame update
     void Start()
     {
+        manaBar = GameObject.FindGameObjectWithTag("ManaUI").GetComponent<ResourceUI>();
         mana = 100f;
+        manaBar.SetMax(mana);
         manaRegen = 0.05f;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (mana <= 100f) {
-            mana += manaRegen;
-        }
+        ManaUpdate();
     }
 
+    //Activates specified relic and drains mana, or does nothing because not enough mana.
     public void RelicActivate(int relicNum)
     {
-        //Debug.Log("relic manager");
         if (relics[relicNum].manaCost <= mana)
         {
             mana -= relics[relicNum].manaCost;
@@ -34,5 +33,14 @@ public class RelicManager : MonoBehaviour
         else {
             Debug.Log("not enough mana!");
         }
+    }
+
+    //Regenerate mana up to a set limit and update the mana UI.
+    public void ManaUpdate() {
+        if (mana <= 100f)
+        {
+            mana += manaRegen;
+        }
+        manaBar.SetValue(mana);
     }
 }

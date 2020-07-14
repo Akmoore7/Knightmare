@@ -10,29 +10,23 @@ public class SceneTransition : MonoBehaviour
     public PlayerController player;
 
     public SceneEntrance[] entrances;
-    //public BoxCollider[] portals;
-    // Start is called before the first frame update
+
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        entrances = GameObject.FindGameObjectWithTag("Entrance").GetComponents<SceneEntrance>();
         findEntrance();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            StartCoroutine(LoadScene());
-
-        }
-    }
-
+    //Changes the scene to "newScene".
     public void changeScene(string newScene)
     {
         sceneName = newScene;
         StartCoroutine(LoadScene());
     }
 
+    //Finds the Entrance with the "ConnectedExit" value that is the same as the 
+    //  "lastExitUsed" stored in the GameMaster.
     public void findEntrance()
     {
         for(int i = 0; i < entrances.Length; i++)
@@ -47,6 +41,7 @@ public class SceneTransition : MonoBehaviour
 
     }
 
+    //Animated Scene Fadeout, change WaitForSeconds to change fadeout time.
     IEnumerator LoadScene()
     {
         sceneAnimator.SetTrigger("end");

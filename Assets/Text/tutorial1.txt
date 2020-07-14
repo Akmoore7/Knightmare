@@ -1,0 +1,3 @@
+Welcome to Knightmare! (Hit RETURN to progress dialogue!)
+Here we will teach you some simple controls!
+Start with WASD to move side to side!

@@ -1,0 +1,3 @@
+Wow great job out there!
+Now try holding [SHIFT] to sprint!
+Click [RMB] with no [WASD] input to shoot a projectile!
