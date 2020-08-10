@@ -14,7 +14,7 @@ public class SceneTransition : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-        entrances = GameObject.FindGameObjectWithTag("Entrance").GetComponents<SceneEntrance>();
+        //entrances = GameObject.FindGameObjectWithTag("Entrance").GetComponents<SceneEntrance>();
         findEntrance();
     }
 
@@ -35,7 +35,7 @@ public class SceneTransition : MonoBehaviour
             if (entrances[i].connectedExit.Equals(GameMaster.lastExitUsed))
             {
                 player.setTransformPos(entrances[i].GetComponent<Transform>());
-                Debug.Log("exitfound");
+                Debug.Log(entrances[i].connectedExit);
             }
         }
 

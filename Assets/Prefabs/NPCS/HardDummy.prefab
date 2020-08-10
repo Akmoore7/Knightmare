@@ -128,7 +128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   box: {fileID: 2521513530010141249}
-  health: 100
+  health: 65
   invulCD: 0.2
   invulTimer: 0
   moveDirection: {x: 0, y: 0, z: 0}

@@ -23,7 +23,7 @@ public class NPCController : MonoBehaviour
 
     public Vector3 moveDirection = Vector3.zero;
 
-    void Start()
+    public virtual void Start()
     {
         alreadyKnocked = true;
         alreadyDead = false;

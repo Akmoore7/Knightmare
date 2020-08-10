@@ -6,9 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Environment2.unity
+    path: Assets/Scenes/TestScenes/Environment2.unity
     guid: e044afb36ede5ec4dbe9c5bddc083ed0
   - enabled: 1
-    path: Assets/Scenes/Environment Test.unity
+    path: Assets/Scenes/TestScenes/Environment Test.unity
     guid: 0714eef2b4c69a4439cb2f3d2e49a1af
+  - enabled: 1
+    path: Assets/Scenes/Levels/Forest1.unity
+    guid: 40b97c1ca64d2914c8fdc5704b3e05ad
+  - enabled: 1
+    path: Assets/Scenes/Levels/Forest2.unity
+    guid: 244e0326a48ccd24eb9f74859c8c8afb
+  - enabled: 1
+    path: Assets/Scenes/Levels/Building1.unity
+    guid: 3c8b1f1ec433e9f44a13649dfbff94d1
   m_configObjects: {}

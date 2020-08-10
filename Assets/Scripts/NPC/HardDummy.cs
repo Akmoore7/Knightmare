@@ -22,6 +22,7 @@ public class HardDummy : NPCController
         else if (damageController.alive && !inHitStun) {
             if (characterController.isGrounded)
             {
+                moveDirection.y = 0;
                 float playerDistance = playerLoc.position.x - transform.position.x;
                 if (playerDistance < -0.1 && playerDistance > -5)
                 {
@@ -37,7 +38,7 @@ public class HardDummy : NPCController
                 }
             }
         }
-
+        
         moveDirection.y -= gravity * Time.deltaTime;
 
         SwitchSprite();
